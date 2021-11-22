@@ -16,6 +16,12 @@ translations:
   CYM:
     common: Awstria
     official: Republic of Austria
+  ENG:
+    common: Austria
+    official:  Republic of Austria
+  DEU:
+    common: Österreich
+    official: Republik Östereich
   FRA:
     common: Autriche
     official: République d'Autriche

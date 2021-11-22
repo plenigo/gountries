@@ -4,3 +4,9 @@ _projects
 _steps
 _temp
 cover.out
+/.idea/.gitignore
+/.idea/encodings.xml
+/.idea/gountries.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml

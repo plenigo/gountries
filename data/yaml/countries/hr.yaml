@@ -16,6 +16,12 @@ translations:
   CYM:
     common: Croatia
     official: Republic of Croatia
+  DEU:
+    common: Kroatien
+    official: Republik Kroatien
+  ENG:
+    common: Croatia
+    official: Republic of Croatia
   FIN:
     common: Kroatia
     official: Kroatian tasavalta

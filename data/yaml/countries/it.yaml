@@ -1,6 +1,6 @@
 name:
   common: Italy
-  official: Italian Republic
+  official: Republic of Italy
   native:
     bar:
       common: Italien
@@ -21,6 +21,12 @@ languages:
   ita: Italian
   srd: Sardinian
 translations:
+  ENG:
+    common: Italy
+    official: Republic of Italy
+  DEU:
+    common: Italien
+    official: Italienische Republik
   FRA:
     common: Italie
     official: République italienne

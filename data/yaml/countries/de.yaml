@@ -1,4 +1,4 @@
-name:
+hrname:
   common: Germany
   official: Federal Republic of Germany
   native:
@@ -16,6 +16,9 @@ translations:
   DEU:
     common: Deutschland
     official: Bundesrepublik Deutschland
+  ENG:
+    common: Germany
+    official: Federal Republic of Germany
   FIN:
     common: Saksa
     official: Saksan liittotasavalta
