@@ -7,12 +7,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // New creates an Query object and unmarshals the json file.
 func New() *Query {
-
 	dataPath := filepath.Join("data", "yaml")
 
 	return NewFromPath(dataPath)
@@ -20,7 +19,6 @@ func New() *Query {
 
 // NewFromPath creates a Query object from data folder in provided path
 func NewFromPath(dataPath string) *Query {
-
 	queryInitOnce.Do(func() {
 		queryInstance = &Query{
 			Countries: populateCountries(dataPath),
@@ -29,6 +27,8 @@ func NewFromPath(dataPath string) *Query {
 		queryInstance.NameToAlpha2 = populateNameIndex(queryInstance.Countries)
 		queryInstance.Alpha3ToAlpha2 = populateAlphaIndex(queryInstance.Countries)
 		queryInstance.NativeNameToAlpha2 = populateNativeNameIndex(queryInstance.Countries)
+		queryInstance.CallingCodeToAlpha2 = populateCallingCodeIndex(queryInstance.Countries)
+		queryInstance.CurrencyToAlpha2 = populateCallingCurrencyIndex(queryInstance.Countries)
 
 		subdivisions := populateSubdivisions(dataPath)
 		for k := range queryInstance.Countries {
@@ -70,11 +70,10 @@ func populateAlphaIndex(countries map[string]Country) map[string]string {
 }
 
 func populateCountries(dataPath string) map[string]Country {
-
 	// Load countries into memory
 	//
 	//
-	var countries = make(map[string]Country)
+	countries := make(map[string]Country)
 
 	countriesPath := path.Join(dataPath, "countries")
 
@@ -88,23 +87,17 @@ func populateCountries(dataPath string) map[string]Country {
 		var file []byte
 
 		for _, v := range info {
-
 			if !v.IsDir() {
-
 				if file, err = ioutil.ReadFile(filepath.Join(countriesPath, v.Name())); err == nil {
 
 					country := Country{}
 					if err = yaml.Unmarshal(file, &country); err == nil {
-
 						// Save
 						countries[country.Codes.Alpha2] = country
-
 					}
 
 				}
-
 			}
-
 		}
 
 	} else {
@@ -116,7 +109,7 @@ func populateCountries(dataPath string) map[string]Country {
 func populateCountriesFromPackedData(fileList []string, path string) map[string]Country {
 	var data []byte
 	var err error
-	var countries = make(map[string]Country)
+	countries := make(map[string]Country)
 
 	for _, yamlFile := range fileList {
 		var country Country
@@ -133,7 +126,6 @@ func populateCountriesFromPackedData(fileList []string, path string) map[string]
 }
 
 func populateSubdivisions(dataPath string) (list map[string][]SubDivision) {
-
 	// Load countries into memory
 	//
 
@@ -147,28 +139,21 @@ func populateSubdivisions(dataPath string) (list map[string][]SubDivision) {
 	}
 
 	if info, err := ioutil.ReadDir(subdivisionsPath); err == nil {
-
 		for _, v := range info {
-
 			if !v.IsDir() {
-
 				if file, err := ioutil.ReadFile(filepath.Join(subdivisionsPath, v.Name())); err == nil {
 
 					subdivisions := []SubDivision{}
 
 					if err := yaml.Unmarshal(file, &subdivisions); err == nil {
-
 						// Save
 						// subdivisions = append(subdivisions, subdivision...)
 						list[strings.Split(v.Name(), ".")[0]] = subdivisions
 					}
 
 				}
-
 			}
-
 		}
-
 	} else {
 		panic("Error loading Subdivisions")
 	}
@@ -205,6 +190,27 @@ func populateNativeNameIndex(countries map[string]Country) map[string]string {
 			officialNativeName := strings.ToLower(nativeNames.Official)
 			index[nativeName] = alpha2
 			index[officialNativeName] = alpha2
+		}
+	}
+	return index
+}
+
+func populateCallingCodeIndex(countries map[string]Country) map[string]string {
+	index := make(map[string]string)
+	for alpha2, country := range countries {
+		for _, callingCode := range country.CallingCodes {
+			index[callingCode] = alpha2
+		}
+	}
+	return index
+}
+
+func populateCallingCurrencyIndex(countries map[string]Country) map[string][]Country {
+	index := make(map[string][]Country)
+
+	for _, country := range countries {
+		for _, currency := range country.Currencies {
+			index[currency] = append(index[currency], country)
 		}
 	}
 	return index
