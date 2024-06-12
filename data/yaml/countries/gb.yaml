@@ -5,7 +5,7 @@ name:
     eng:
       common: United Kingdom
       official: United Kingdom of Great Britain and Northern Ireland
-eumember: true
+eumember: false
 landlocked: false
 nationality: ""
 tlds:
